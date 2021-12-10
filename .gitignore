@@ -1,1 +1,2 @@
 docker/src/.env
+docker/src/__pycache__
