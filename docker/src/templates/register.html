@@ -9,7 +9,8 @@
     {{ render_field(form.confirm, placeholder="Password (again)") }}<br>
     {{ render_field(form.hospital, placeholder="Hospital") }}<br>
     {{ render_field(form.unit, placeholder="Unit") }}<br>
-    <p><input class="btn btn-default btn-submit" type="submit" value="Login"></p>
+    {{ render_field(form.role, placeholder="Doctor, Sister or Maintenance") }}<br>
+    <p><input class="btn btn-default btn-submit" type="submit" value="Register"></p>
 </form>
 
 <a href="/">index</a><br>
