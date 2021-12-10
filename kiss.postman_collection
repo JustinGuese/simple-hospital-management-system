@@ -1,0 +1,258 @@
+{
+	"info": {
+		"_postman_id": "f0cd9ab9-2343-458f-94b2-bba26b8132e9",
+		"name": "covid-backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getProctected",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/protectedurl",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"protectedurl"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"guese.justin@gmail.com\",\r\n    \"password\" : \"tendies123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createUserAdmin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"guese.justin@gmail.com\",\r\n    \"password\" : \"tendies123\",\r\n    \"name\" : \"justin Güse\",\r\n    \"role\" : \"admin\",\r\n    \"company\" : \"Apple\",\r\n    \"unit\" : \"admin\",\r\n    \"creationpassword\" : \"nuggets\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/createUserAdmin",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"createUserAdmin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/logout",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/guese/Downloads/1c3ed8c1-f8b4-4c4e-86cb-60aac0b0bf1a.pdf"
+						},
+						{
+							"key": "testtype",
+							"value": "vaccination",
+							"type": "text"
+						},
+						{
+							"key": "testtype",
+							"value": "test",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}/upload",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllFiles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/getAllFiles",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"getAllFiles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"elronmcbong@byom.de\",\r\n    \"password\" : \"tendies123\",\r\n    \"name\" : \"Elron Mc Bong\",\r\n    \"role\" : \"unitadmin\",\r\n    \"unit\" : \"marketing\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/createUser",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"createUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUsers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/getUsers",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"getUsers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCurrentUserInfo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/getCurrentUserInfo",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"getCurrentUserInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getExpiredUsers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/getExpiredUsers",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"getExpiredUsers"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "127.0.0.1:5000",
+			"disabled": true
+		},
+		{
+			"key": "URL",
+			"value": "https://covidapp-api.datafortress.cloud/"
+		}
+	]
+}
