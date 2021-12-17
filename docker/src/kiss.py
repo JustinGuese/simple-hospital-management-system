@@ -4,6 +4,7 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
+from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -296,7 +297,6 @@ def doctor_pac_new_diagnosis():
 @login_required
 def add_new_patient():
     if current_user.role in USEREDITROLES:
-        unit = request.form['unit']
         firstname = request.form['firstname']
         lastname = request.form['lastname']
         email = request.form['email']
@@ -308,13 +308,13 @@ def add_new_patient():
         country = request.form['country']
         insurance = request.form['insurance']
         insuranceOther = request.form['insurance-other']
-        pac_id = generate_password_hash(firstname+lastname+email)[:8]
+        pac_id = generate_password_hash(firstname+lastname+email)[-8:]
         
         # assume same hospital and unit as current user
         userHospital = current_user.hospital
-        
+        datetimenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         pat = Patient(pac_id=pac_id, firstName=firstname, lastName=lastname, email=email, phone=phone, address_street=street, address_streetNr=streetnr, address_plz=plz, address_city=city, 
-            address_country=country, insurance=insurance, insuranceOther=insuranceOther, hospital=userHospital)
+            address_country=country, insurance=insurance, insuranceOther=insuranceOther, hospital=userHospital, creation_date = datetimenow, lastUpdate_date = datetimenow)
         db.session.add(pat)
         db.session.commit()
         return redirect("/doctor-pac-view?pacid=%s" % pac_id)
