@@ -22,15 +22,26 @@
             <div class="image-holder"></div>
             <form method="post">
                 <h2 class="text-center"><strong>Create</strong> an account.</h2>
-                <div class="mb-3"><input class="form-control" type="email" name="email" placeholder="Email" required=""></div>
+                <div class="mb-3"><input class="form-control" type="email" name="email" placeholder="Email" required="" autofocus="" inputmode="email"></div>
+                <div class="mb-3"><input class="form-control" type="text" name="name" placeholder="Name" required="" inputmode="latin-name"></div>
                 <div class="mb-3"><input class="form-control" type="text" name="clinic" placeholder="Hospital Name" required=""></div>
-                <div class="mb-3"><input class="form-control" type="text" name="clinic" placeholder="Unit Name" required=""></div>
+                <div class="mb-3"><input class="form-control" type="text" name="unit" placeholder="Unit Name" required="" style="background: rgb(247, 249, 252);"></div>
+                <div class="mb-3"><select class="form-select" style="background: rgb(247,249,252);border-radius: 0px;border-color: rgba(80,94,108,0.08);" name="role">
+                        <option value="superadmin">superadmin</option>
+                        <option value="admin">admin</option>
+                        <option value="unitadmin">unitadmin</option>
+                        <option value="doctor" selected="">doctor</option>
+                        <option value="nurse">nurse</option>
+                        <option value="maintenance">maintenance</option>
+                        <option value="hospitalview">hospitalview</option>
+                        <option value="role" selected="">Role</option>
+                    </select></div>
                 <div class="mb-3"><input class="form-control" type="password" name="password" placeholder="Password" required=""></div>
                 <div class="mb-3"><input class="form-control" type="password" name="password-repeat" placeholder="Password (repeat)" required=""></div>
                 <div class="mb-3">
-                    <div class="form-check"><label class="form-check-label"><input class="form-check-input" type="checkbox">I agree to the license terms.</label></div>
-                </div>
-                <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Sign Up</button></div><a class="already" href="#">You already have an account? Login here.</a>
+                    <div class="form-check"><label class="form-check-label"><input class="form-check-input" type="checkbox" name="license-terms">I agree to the license terms.</label></div>
+                </div><small class="form-text" style="color: rgb(148,7,7);font-weight: bold;">{{ error }}</small>
+                <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit" style="margin-top: 18px;">Sign Up</button></div><a class="already" href="login">You already have an account? Login here.</a>
             </form>
         </div>
     </section>

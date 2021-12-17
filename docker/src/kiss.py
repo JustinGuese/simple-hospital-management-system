@@ -1,6 +1,6 @@
 
 from flask import Flask, jsonify, render_template, request, url_for, redirect, session, send_from_directory
-from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user 
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
@@ -15,7 +15,7 @@ login_manager.init_app(app)
 
 
 CREATIONPASSWORD = environ["SECRET_KEY"]
-ROLES = ["admin", "unitadmin", "doctor", "sister", "maintenance", "hospitalview"]
+ROLES = ["superadmin", "admin", "unitadmin", "doctor", "nurse", "maintenance", "hospitalview"]
 
 app = Flask(__name__)
 app.secret_key = environ["SECRET_KEY"]
@@ -116,6 +116,8 @@ login_manager.login_view = "login"
 db.create_all()
 db.session.commit()
 
+
+
 # ROUTES ##
 # somewhere to login
 @app.route('/login', methods=["GET", "POST"])
@@ -126,11 +128,14 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user is not None and user.check_password(password):
             login_user(user)
-            return redirect("index.html")
+            return redirect("/")
         else:
             if user is None:
                 return render_template("login.html", error="User not found")
-            return {"error": "Invalid username or password"}
+            elif not user.check_password(password):
+                return render_template("login.html", error="Wrong password")
+            else:
+                return {"error": "Invalid username or password"}
     elif request.method == 'GET':
         return render_template('login.html', error = "")
     else:
@@ -138,31 +143,37 @@ def login():
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
-    form = RegisterForm(request.form, csrf_enabled=False)
-    if form.validate_on_submit():
-        resp = _addUser(form.email.data, form.name.data, form.password.data, form.role.data, form.hospital.data, form.unit.data)
-        print(resp)
-        if resp.code == 200:
-            return redirect(url_for('app.login'))
+    if request.method == 'POST':
+        email = request.form['email']
+        name = request.form['name']
+        password = request.form['password']
+        password_repeat = request.form['password-repeat']
+        hospital = request.form['clinic']
+        unit = request.form['unit']
+        role = request.form['role']
+        license = request.form['license-terms']
+        user = User.query.filter_by(email=email).first()
+        if user is None and password == password_repeat:
+            user = User(email=email, name=name, role=role, hospital=hospital, unit=unit)
+            user.set_password(password)
+            db.session.add(user)
+            db.session.commit()
+            return redirect("login.html")
         else:
-            return resp
-    return render_template('register.html', form=form)
+            if user is not None:
+                return render_template("register.html", error="User exists, log in instead")
+            else:
+                raise Exception("Invalid request ", request)
+    elif request.method == 'GET':
+        return render_template('register.html', error = "")
+    else:
+        raise Exception("Invalid request")
+    
+@app.route("/", methods=["GET"])
+@login_required
+def index():
+    return render_template("index.html", name = current_user.name)
 
-def _addUser(email, name, password, role, hospital, unit):
-    # else create user
-    if role not in ROLES:
-        return jsonify({"error": "Wrong role: %s. Must be one of: %s" % (role, str(ROLES))}), 401
-    
-    user = User(email=email, name=name, role=role, hospital = hospital, unit = unit)
-    user.set_password(password)
-    try:
-        db.session.add(user)
-        db.session.commit()
-        return jsonify({"success": "User created successfully"}), 200
-    except Exception as e:
-        return jsonify({"error": "Error creating user: %s" % e.args[0]}), 400
-    
-    
 def _getUser(email):
     user = User.query.filter_by(email=email).first()
     return user
@@ -182,58 +193,6 @@ def _isOneAdmin(user):
     else:
         return False
 
-# really only used for hardcore admins
-@app.route("/createUserAdmin", methods=["POST"])
-def createUserAdmin():
-    data = request.get_json()
-    try:
-        email = data["email"]
-        password = data["password"]
-        creationpassword = data["creationpassword"]
-        name = data["name"]
-        role = data["role"]
-        # hospital structure
-        hospital = data["hospital"]
-        unit = data["unit"]
-    except KeyError as e:
-        return jsonify({"error": "Missing key %s" % e.args[0]}), 400
-    
-    if creationpassword != CREATIONPASSWORD:
-        return jsonify({"error": "Wrong creation password"}), 401
-    
-    # else create user 
-    return _addUser(email, name, password, role, hospital, unit)
-
-@app.route("/createUser", methods=["POST"])
-@login_required
-def createUser():
-    # first check if admin
-    user = _getUser(session["email"])
-    if not _isOneAdmin(user):
-        return jsonify({"error": "Only admins can create users for their hospital. Please contact support"}), 401
-    
-    data = request.get_json()
-    try:
-        email = data["email"]
-        password = data["password"]
-        name = data["name"]
-        role = data["role"]
-        unit = data.get("unit") # optional if admin
-    except KeyError as e:
-        return jsonify({"error": "Missing key %s" % e.args[0]}), 400
-    
-    # if admin then set hospital to the hospital of message sender
-    hospital, senderUnit = _gethospitalAndUnit(session["email"])
-    
-    if unit is None and role == "admin":
-        unit = "admin"
-    elif unit is None and role == "unitadmin":
-        unit = senderUnit
-    elif unit is None:
-        return jsonify({"error": "Unit not specified"}), 400
-    
-    return _addUser(email, name, password, role, hospital, unit)
-    
 @app.route("/getCurrentUserInfo", methods=["GET"])
 @login_required
 def getCurrentUserInfo():
@@ -266,7 +225,7 @@ def getUsers():
 @login_required
 def logout():
     logout_user()
-    return {"success" : "user logged out"}, 200
+    return render_template("login.html", error = "successfully logged out")
 
 
 # callback to reload the user object        
@@ -282,9 +241,36 @@ def load_user(email):
 
 @login_manager.unauthorized_handler
 def unauthorized_handler():
-    return 'please login du spasst', 401
+    return redirect("/login")
+
+## subpage views
+@app.route("/doctor-pac-search", methods=["GET"])
+@login_required
+def doctor_pac_search():
+    return render_template("doctor-pac-search.html")
+
+@app.route("/booking-pac-search", methods=["GET"])
+@login_required
+def booking_pac_search():
+    return render_template("booking-pac-search.html")
+
+@app.route("/booking-new-patient", methods=["GET"])
+@login_required
+def booking_new_paatient():
+    return render_template("booking-new-patient.html")
+
+@app.route("/doctor-pac-view", methods=["GET"])
+@login_required
+def doctor_pac_view():
+    return render_template("doctor-pac-view.html")
+
+@app.route("/doctor-pac-new-diagnosis", methods=["GET"])
+@login_required
+def doctor_pac_new_diagnosis():
+    return render_template("doctor-pac-new-diagnosis.html")
+
+
 
 ## patient functionality
 if __name__ == '__main__':
     app.run(host = "0.0.0.0", debug=True)
-

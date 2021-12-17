@@ -18,12 +18,12 @@
         <div class="container"><a class="navbar-brand" href="#">KISS Clinic Management</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="/index.html" style="font-weight: bold;">Booking</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#">Doctor</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/booking-pac-search.html" style="font-weight: bold;">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/doctor-pac-search.html">Doctor</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Nurse</a></li>
                     <li class="nav-item"></li>
                     <li class="nav-item dropdown show"><a class="dropdown-toggle nav-link" aria-expanded="true" data-bs-toggle="dropdown" href="#">Settings</a>
-                        <div class="dropdown-menu show"><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">User Management</a><a class="dropdown-item" href="#">Logout</a></div>
+                        <div class="dropdown-menu show"><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">User Management</a><a class="dropdown-item" href="logout">Logout</a></div>
                     </li>
                 </ul>
             </div>
@@ -32,7 +32,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>You are logged in!</h1>
+                <h1>Welcome {{ name }}!</h1>
             </div>
         </div>
     </div>
