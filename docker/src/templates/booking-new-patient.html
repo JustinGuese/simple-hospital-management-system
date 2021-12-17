@@ -36,20 +36,20 @@
             <li class="breadcrumb-item"><a href="#"><span>New Patient</span></a></li>
         </ol>
         <h1>Add a new patient</h1>
-        <form style="max-width: 300px;">
-            <h3>Personal Data</h3><label class="form-label" style="margin-top: 6px;">First name</label><input class="form-control" type="text" style="max-width: 300px;" inputmode="latin-name" placeholder="Max"><label class="form-label" style="margin-top: 6px;">Last Name</label><input class="form-control" type="text" inputmode="latin-name" style="max-width: 300px;" placeholder="Müller"><label class="form-label" style="margin-top: 6px;">Email</label><input class="form-control" type="text" inputmode="email" placeholder="max.muster@gmail.com" style="max-width: 300px;"><label class="form-label" style="margin-top: 6px;">Phone</label><input class="form-control" type="text" placeholder="+491654611" inputmode="tel" style="max-width: 300px;">
-            <h3 style="margin-top: 8px;">Location</h3><label class="form-label" style="margin-top: 6px;">Street</label><input class="form-control" type="text" style="max-width: 300px;" placeholder="Musterallee" inputmode="latin"><label class="form-label" style="margin-top: 6px;">Nr.</label><input class="form-control" type="text" style="max-width: 300px;" placeholder="31" inputmode="numeric"><label class="form-label" style="margin-top: 6px;">PLZ</label><input class="form-control" type="text" style="max-width: 300px;" placeholder="86152" inputmode="numeric"><label class="form-label" style="margin-top: 6px;">Country</label><select class="form-select" style="max-width: 300px;">
+        <form style="max-width: 300px;" action="add-new-patient" method="post">
+            <h3>Personal Data</h3><label class="form-label" style="margin-top: 6px;">Unit</label><input class="form-control" type="text" style="max-width: 300px;" inputmode="latin-name" placeholder="Surgery" name="unit"><label class="form-label" style="margin-top: 6px;">First name</label><input class="form-control" type="text" style="max-width: 300px;" inputmode="latin-name" placeholder="Max" name="firstname"><label class="form-label" style="margin-top: 6px;">Last Name</label><input class="form-control" type="text" inputmode="latin-name" style="max-width: 300px;" placeholder="Müller" name="lastname"><label class="form-label" style="margin-top: 6px;">Email</label><input class="form-control" type="text" inputmode="email" placeholder="max.muster@gmail.com" style="max-width: 300px;" name="email"><label class="form-label" style="margin-top: 6px;">Phone</label><input class="form-control" type="text" placeholder="+491654611" inputmode="tel" style="max-width: 300px;" name="phone">
+            <h3 style="margin-top: 8px;">Location</h3><label class="form-label" style="margin-top: 6px;">Street</label><input class="form-control" type="text" style="max-width: 300px;" placeholder="Musterallee" inputmode="latin" name="street"><label class="form-label" style="margin-top: 6px;">Nr.</label><input class="form-control" type="text" style="max-width: 300px;" placeholder="31" inputmode="numeric" name="streetnr"><label class="form-label" style="margin-top: 6px;">PLZ</label><input class="form-control" type="text" style="max-width: 300px;" placeholder="86152" inputmode="numeric" name="plz"><label class="form-label" style="margin-top: 6px;">City</label><input class="form-control" type="text" style="max-width: 300px;" placeholder="Munich" inputmode="latin" name="city"><label class="form-label" style="margin-top: 6px;">Country</label><select class="form-select" style="max-width: 300px;" name="country">
                 <option value="germany" selected="">Germany</option>
                 <option value="france">France</option>
                 <option value="spain">Spain</option>
                 <option value="switzerland">Switzerland</option>
             </select>
-            <h3 style="margin-top: 8px;">Insurance Information</h3><label class="form-label" style="margin-top: 6px;">Insurance</label><select class="form-select" style="max-width: 300px;">
+            <h3 style="margin-top: 8px;">Insurance Information</h3><label class="form-label" style="margin-top: 6px;">Insurance</label><select class="form-select" style="max-width: 300px;" name="insurance">
                 <option value="bak" selected="">BAK</option>
                 <option value="akk">AKK</option>
                 <option value="private">Private</option>
                 <option value="other">Other</option>
-            </select><input class="form-control" type="text" placeholder="if other, please type it here" style="margin-top: 4px;"><button class="btn btn-primary" type="submit" style="margin-top: 8px;">Create</button>
+            </select><input class="form-control" type="text" placeholder="if other, please type it here" style="margin-top: 4px;" name="insurance-other"><button class="btn btn-primary" type="submit" style="margin-top: 8px;">Create</button>
         </form>
     </div>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>

@@ -1,5 +1,5 @@
 
-from flask import Flask, jsonify, render_template, request, url_for, redirect, session, send_from_directory
+from flask import Flask, jsonify, render_template, request, url_for, redirect, session, send_from_directory, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -16,6 +16,9 @@ login_manager.init_app(app)
 
 CREATIONPASSWORD = environ["SECRET_KEY"]
 ROLES = ["superadmin", "admin", "unitadmin", "doctor", "nurse", "maintenance", "hospitalview"]
+USEREDITROLES = ["superadmin", "admin", "unitadmin", "doctor", "nurse"]
+DIAGNOSISROLES = ["nurse", "doctor"]
+UNITADDROLE = ["unitadmin", "superadmin", "admin"]
 
 app = Flask(__name__)
 app.secret_key = environ["SECRET_KEY"]
@@ -58,19 +61,21 @@ class User(db.Model):
     
 class Patient(db.Model):
     __tablename__ = 'patients'
-    pac_id = db.Column(db.Integer, primary_key=True)
+    pac_id = db.Column(db.String(8), primary_key=True)
     firstName = db.Column(db.String(64), index=True)
     lastName = db.Column(db.String(64), index=True)
     email = db.Column(db.String(120), index=True, unique=True)
     phone = db.Column(db.String(64), index=True)
     address_street = db.Column(db.String(64), index=True)
-    address_plz = db.Column(db.Integer(), index=True)
+    address_streetNr = db.Column(db.Integer, index=True)
+    address_plz = db.Column(db.Integer, index=True)
     address_city = db.Column(db.String(64), index=True)
     address_country = db.Column(db.String(64), index=True)
+    insurance = db.Column(db.String(64), index=True)
+    insuranceOther = db.Column(db.String(64), index=True)
     hospital = db.Column(db.String(120), index=True)
     creation_date = db.Column(db.DateTime, index=True)
     lastUpdate_date = db.Column(db.DateTime, index=True)
-    test_type = db.Column(db.String(64), index=True)
     
 class Doctors(db.Model):
     __tablename__ = 'doctors'
@@ -85,7 +90,7 @@ class Doctors(db.Model):
 class Case(db.Model):
     __tablename__ = 'cases'
     case_id = db.Column(db.Integer, primary_key=True)
-    pac_id = db.Column(db.Integer, db.ForeignKey('patients.pac_id'))
+    pac_id = db.Column(db.String(8), db.ForeignKey('patients.pac_id'))
     patient = db.relationship("Patient", backref=db.backref("patients", uselist=False))
     stay_from = db.Column(db.DateTime, index=True)
     stay_to = db.Column(db.DateTime, index=True)
@@ -158,7 +163,7 @@ def register():
             user.set_password(password)
             db.session.add(user)
             db.session.commit()
-            return redirect("login.html")
+            return redirect("/login")
         else:
             if user is not None:
                 return render_template("register.html", error="User exists, log in instead")
@@ -262,12 +267,51 @@ def booking_new_paatient():
 @app.route("/doctor-pac-view", methods=["GET"])
 @login_required
 def doctor_pac_view():
-    return render_template("doctor-pac-view.html")
+    pacid = request.args.get("pacid")
+    if pacid is None:
+        flash("No pacid provided")
+        return redirect("/doctor-pac-search")
+    else:
+        return render_template("doctor-pac-view.html", pacid=pacid)
 
 @app.route("/doctor-pac-new-diagnosis", methods=["GET"])
 @login_required
 def doctor_pac_new_diagnosis():
-    return render_template("doctor-pac-new-diagnosis.html")
+    if current_user.role in DIAGNOSISROLES:
+        return render_template("doctor-pac-new-diagnosis.html")
+    else:
+        flash("you are not authorized to view this page")
+        return redirect("/")
+
+@app.route("/add-new-patient", methods=["POST"])
+@login_required
+def add_new_patient():
+    if current_user.role in USEREDITROLES:
+        unit = request.form['unit']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        email = request.form['email']
+        phone = request.form['phone']
+        street = request.form['street']
+        streetnr = int(request.form['streetnr'])
+        plz = int(request.form['plz'])
+        city = request.form['city']
+        country = request.form['country']
+        insurance = request.form['insurance']
+        insuranceOther = request.form['insurance-other']
+        pac_id = generate_password_hash(firstname+lastname+email)[:8]
+        
+        # assume same hospital and unit as current user
+        userHospital = current_user.hospital
+        
+        pat = Patient(pac_id=pac_id, firstName=firstname, lastName=lastname, email=email, phone=phone, address_street=street, address_streetNr=streetnr, address_plz=plz, address_city=city, 
+            address_country=country, insurance=insurance, insuranceOther=insuranceOther, hospital=userHospital)
+        db.session.add(pat)
+        db.session.commit()
+        return redirect("/doctor-pac-view?pacid=%s" % pac_id)
+    else:
+        flash("you are not authorized to add a new patient")
+        return redirect("/")
 
 
 
