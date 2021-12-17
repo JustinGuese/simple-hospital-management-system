@@ -37,7 +37,7 @@
                     <li class="breadcrumb-item"><a href="#"><span>Doctor</span></a></li>
                     <li class="breadcrumb-item"><a href="#"><span>Patient</span></a></li>
                 </ol>
-                <h1>Hans Müller</h1><small class="form-text">pacid: {{ pacid }}</small>
+                <h1>{{ firstName }} {{ lastName }}</h1><small class="form-text">pacid: {{ pacid }}</small>
             </div>
         </div>
         <div class="row" style="margin-top: 12px;margin-bottom: 12px;">
@@ -53,16 +53,16 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Language</td>
-                                <td>French</td>
+                                <td>Email</td>
+                                <td>{{ email }}</td>
                             </tr>
                             <tr>
-                                <td>Gender</td>
-                                <td>Female</td>
+                                <td>Phone Nr</td>
+                                <td>{{ phone }}</td>
                             </tr>
                             <tr>
-                                <td>Age</td>
-                                <td>71</td>
+                                <td>Address</td>
+                                <td>{{ fullAddress }}<br></td>
                             </tr>
                         </tbody>
                     </table>

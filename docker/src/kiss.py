@@ -272,7 +272,16 @@ def doctor_pac_view():
         flash("No pacid provided")
         return redirect("/doctor-pac-search")
     else:
-        return render_template("doctor-pac-view.html", pacid=pacid)
+        patient = Patient.query.filter_by(pac_id=pacid).first()
+        if patient is None:
+            flash("Patient not found")
+            return redirect("/doctor-pac-search")
+        else:
+            fullStreet = patient.address_street + " " + str(patient.address_streetNr)
+            fullAddress = ", ".join([fullStreet, patient.address_city, str(patient.address_plz), patient.address_country])
+            return render_template("doctor-pac-view.html", pacid=pacid, firstName = patient.firstName, lastName = patient.lastName, 
+                                email = patient.email, phone = patient.phone, fullAddress = fullAddress
+                                )
 
 @app.route("/doctor-pac-new-diagnosis", methods=["GET"])
 @login_required
