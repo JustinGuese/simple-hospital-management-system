@@ -1,14 +1,10 @@
 
-from flask import Flask, jsonify, render_template, request, url_for, redirect, session, abort, Response
+from flask import Flask, jsonify, render_template, request, url_for, redirect, session, send_from_directory
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from dotenv import load_dotenv
-from flask_wtf import FlaskForm
-from wtforms import BooleanField, PasswordField, SubmitField, TextField, SelectField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
-from wtforms import ValidationError
 
 load_dotenv()
 
@@ -30,6 +26,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%s:%s@%s:%s/%s' % (
     environ["POSTGRES_PORT"],
     environ["POSTGRES_DB"]
 )
+
+@app.route("/assets/<path:path>") # workaround
+def static_dir(path):
+    return send_from_directory("templates/assets", path)
+
 db = SQLAlchemy(app)
 
 # DB MODELS
@@ -104,63 +105,6 @@ class Diagnosis(db.Model):
     freetext = db.Column(db.String(512), index=True)
 ## end db models
 
-# FORMS
-
-class LoginForm(FlaskForm):
-    email = TextField('Email',
-            validators=[DataRequired(), Length(1, 64), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Keep me logged in')
-    submit = SubmitField('Log In')
-
-    def __init__(self, *args, **kwargs):
-        super(LoginForm, self).__init__(*args, **kwargs)
-
-    def validate(self):
-        initial_validation = super(LoginForm, self).validate()
-        if not initial_validation:
-            return False
-        user = User.query.filter_by(email=self.email.data).first()
-        if not user:
-            self.email.errors.append('Unknown email')
-            return False
-        if not user.check_password(self.password.data):
-            self.password.errors.append('Invalid password')
-            return False
-        return True
-
-
-class RegisterForm(FlaskForm):
-    name = TextField('Name', validators=[DataRequired(), Length(min=6, max=40)])
-    email = TextField('Email',
-            validators=[DataRequired(), Email(), Length(min=6, max=40)])
-    password = PasswordField('Password',
-            validators=[DataRequired(), Length(min=8, max=64)])
-    confirm = PasswordField('Verify password',
-            validators=[DataRequired(), EqualTo('password',
-            message='Passwords must match')])
-    hospital = TextField('Hospital',
-            validators=[DataRequired(), Length(min=6, max=64)])
-    unit = TextField('Unit',
-            validators=[DataRequired(), Length(min=1, max=64)])
-    role = SelectField(u'Field name', choices = ["doctor", "nurse", "maintenance"], validators = [DataRequired()])
-
-
-
-    def __init__(self, *args, **kwargs):
-        super(RegisterForm, self).__init__(*args, **kwargs)
-
-    def validate(self):
-        initial_validation = super(RegisterForm, self).validate()
-        if not initial_validation:
-            return False
-        user = User.query.filter_by(email=self.email.data).first()
-        if user:
-            self.email.errors.append("Email already registered")
-            return False
-        return True
-# END FORMS
-
 # flask-login
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -176,14 +120,21 @@ db.session.commit()
 # somewhere to login
 @app.route('/login', methods=["GET", "POST"])
 def login():
-    form = LoginForm(request.form)
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user is not None and user.check_password(form.password.data):
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
+        if user is not None and user.check_password(password):
             login_user(user)
-            redirect_url = request.args.get('next') or url_for('main.login')
-            return redirect(redirect_url)
-    return render_template('login.html', form=form)
+            return redirect("index.html")
+        else:
+            if user is None:
+                return render_template("login.html", error="User not found")
+            return {"error": "Invalid username or password"}
+    elif request.method == 'GET':
+        return render_template('login.html', error = "")
+    else:
+        raise Exception("Invalid request")
 
 @app.route('/register', methods=["GET", "POST"])
 def register():

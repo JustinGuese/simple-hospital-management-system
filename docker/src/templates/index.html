@@ -1,13 +1,43 @@
-<h1>INDEX</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-{% if g.user.is_authenticated() %}
-    <h3>{{ g.user.username }}</h3>
-{% endif %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>KISS Clinic</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="/assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="/assets/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="/assets/css/Registration-Form-with-Photo.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
 
-<a href="/home">home</a><br>
-{% if g.user.is_authenticated() %}
-    <a href="/logout">logout</a><br>
-{% else %}
-    <a href="/login">login</a><br>
-    <a href="/register">register</a><br>
-{% endif %}
+<body style="height: 768px;">
+    <nav class="navbar navbar-light navbar-expand-lg navigation-clean">
+        <div class="container"><a class="navbar-brand" href="#">KISS Clinic Management</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/index.html" style="font-weight: bold;">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#">Doctor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Nurse</a></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item dropdown show"><a class="dropdown-toggle nav-link" aria-expanded="true" data-bs-toggle="dropdown" href="#">Settings</a>
+                        <div class="dropdown-menu show"><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">User Management</a><a class="dropdown-item" href="#">Logout</a></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>You are logged in!</h1>
+            </div>
+        </div>
+    </div>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/bs-init.js"></script>
+</body>
+
+</html>

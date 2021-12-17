@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>KISS Clinic</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="/assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="/assets/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="/assets/css/Registration-Form-with-Photo.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+
+<body style="height: 100%;min-height: 800px;">
+    <nav class="navbar navbar-light navbar-expand-lg navigation-clean">
+        <div class="container"><a class="navbar-brand" href="#">KISS Clinic Management</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/index.html">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/doctor-pac-view.html"><strong>Doctor</strong></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Nurse</a></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Settings</a>
+                        <div class="dropdown-menu"><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">User Management</a><a class="dropdown-item" href="#">Logout</a></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container" style="height: 100%;padding-top: 12px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><span>Home</span></a></li>
+            <li class="breadcrumb-item"><a href="#"><span>Booking</span></a></li>
+            <li class="breadcrumb-item"><a href="#"><span>New Patient</span></a></li>
+        </ol>
+        <h1>Add a new patient</h1>
+        <form style="max-width: 300px;">
+            <h3>Personal Data</h3><label class="form-label" style="margin-top: 6px;">First name</label><input class="form-control" type="text" style="max-width: 300px;" inputmode="latin-name" placeholder="Max"><label class="form-label" style="margin-top: 6px;">Last Name</label><input class="form-control" type="text" inputmode="latin-name" style="max-width: 300px;" placeholder="Müller"><label class="form-label" style="margin-top: 6px;">Email</label><input class="form-control" type="text" inputmode="email" placeholder="max.muster@gmail.com" style="max-width: 300px;"><label class="form-label" style="margin-top: 6px;">Phone</label><input class="form-control" type="text" placeholder="+491654611" inputmode="tel" style="max-width: 300px;">
+            <h3 style="margin-top: 8px;">Location</h3><label class="form-label" style="margin-top: 6px;">Street</label><input class="form-control" type="text" style="max-width: 300px;" placeholder="Musterallee" inputmode="latin"><label class="form-label" style="margin-top: 6px;">Nr.</label><input class="form-control" type="text" style="max-width: 300px;" placeholder="31" inputmode="numeric"><label class="form-label" style="margin-top: 6px;">PLZ</label><input class="form-control" type="text" style="max-width: 300px;" placeholder="86152" inputmode="numeric"><label class="form-label" style="margin-top: 6px;">Country</label><select class="form-select" style="max-width: 300px;">
+                <option value="germany" selected="">Germany</option>
+                <option value="france">France</option>
+                <option value="spain">Spain</option>
+                <option value="switzerland">Switzerland</option>
+            </select>
+            <h3 style="margin-top: 8px;">Insurance Information</h3><label class="form-label" style="margin-top: 6px;">Insurance</label><select class="form-select" style="max-width: 300px;">
+                <option value="bak" selected="">BAK</option>
+                <option value="akk">AKK</option>
+                <option value="private">Private</option>
+                <option value="other">Other</option>
+            </select><input class="form-control" type="text" placeholder="if other, please type it here" style="margin-top: 4px;"><button class="btn btn-primary" type="submit" style="margin-top: 8px;">Create</button>
+        </form>
+    </div>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/bs-init.js"></script>
+</body>
+
+</html>
