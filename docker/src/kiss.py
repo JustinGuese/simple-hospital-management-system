@@ -238,9 +238,14 @@ def doctor_pac_search():
     data = []
     for user in users:
         data.append({"firstName": user.firstName, "lastName": user.lastName, "pac_id": user.pac_id, "edit": "<a href='doctor-pac-view?pacid=%s'>Edit</a>" % str(user.pac_id) })
-    df = pd.DataFrame(data)
-    df = df.set_index("pac_id")
-    return render_template("doctor-pac-search.html", patientstable=df.to_html(render_links=True ,escape=False))
+    if len(data) > 0:
+        df = pd.DataFrame(data)
+        df = df.set_index("pac_id")
+        table = df.to_html(render_links=True ,escape=False)
+    else:
+        table = "No patients yet! Create some to let them show here."
+    return render_template("doctor-pac-search.html", patientstable=table)
+
 
 @app.route("/booking-pac-search", methods=["GET"])
 @login_required
