@@ -19,11 +19,11 @@
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" href="/index.html">Booking</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/doctor-pac-view.html"><strong>Doctor</strong></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="doctor-pac-search"><strong>Doctor</strong></a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Nurse</a></li>
                     <li class="nav-item"></li>
-                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Settings</a>
-                        <div class="dropdown-menu"><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">User Management</a><a class="dropdown-item" href="#">Logout</a></div>
+                    <li class="nav-item dropdown show"><a class="dropdown-toggle nav-link" aria-expanded="true" data-bs-toggle="dropdown" href="#">Settings</a>
+                        <div class="dropdown-menu show"><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">User Management</a><a class="dropdown-item" href="logout">Logout</a></div>
                     </li>
                 </ul>
             </div>
@@ -36,29 +36,8 @@
         </ol>
         <h1>Patient search</h1><button class="btn btn-primary" type="button" style="padding-top: 6px;margin-top: 20px;margin-bottom: 20px;margin-left: 5px;">New Patient</button>
         <form class="text-start"><input class="border rounded-pill form-control" type="search" autofocus="" autocomplete="on" inputmode="latin-name" placeholder="Hans Müller" style="width: 80%;"></form>
-        <div class="table-responsive" style="margin-top: 50px;">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Patient Name</th>
-                        <th>Birthdate</th>
-                        <th>Edit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Hans Lambda</td>
-                        <td>11.12.1992</td>
-                        <td><a href="#">Edit</a></td>
-                    </tr>
-                    <tr>
-                        <td>Peter Maffay</td>
-                        <td>23.12.1992</td>
-                        <td><a href="#">Edit</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <h2 style="margin-top: 20px;">Latest patients</h2>
+        <p>{{ patientstable }}</p>
     </div>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="/assets/js/bs-init.js"></script>

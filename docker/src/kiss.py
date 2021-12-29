@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from datetime import datetime
 from dotenv import load_dotenv
+import pandas as pd
 
 load_dotenv()
 
@@ -75,6 +76,7 @@ class Patient(db.Model):
     insurance = db.Column(db.String(64), index=True)
     insuranceOther = db.Column(db.String(64), index=True)
     hospital = db.Column(db.String(120), index=True)
+    maindoctor = db.Column(db.String(120), index=True)
     creation_date = db.Column(db.DateTime, index=True)
     lastUpdate_date = db.Column(db.DateTime, index=True)
     
@@ -180,51 +182,29 @@ def register():
 def index():
     return render_template("index.html", name = current_user.name)
 
-def _getUser(email):
-    user = User.query.filter_by(email=email).first()
-    return user
-
-def _gethospitalAndUnit(email):
-    user = User.query.filter_by(email=email).first()
-    if user is None:
-        return {"code" : 404, "message" : "User not found"}
-    else:
-        hospital = user.hospital
-        unit = user.unit
-    return hospital, unit
-
-def _isOneAdmin(user):
-    if user.role in ["admin", "unitadmin"]:
-        return True
-    else:
-        return False
-
-@app.route("/getCurrentUserInfo", methods=["GET"])
-@login_required
-def getCurrentUserInfo():
-    user = _getUser(session["email"])
-    return jsonify({"email": user.email, "name": user.name, "role": user.role, "hospital": user.hospital, "unit": user.unit})
+# @app.route("/getCurrentUserInfo", methods=["GET"])
+# @login_required
+# def getCurrentUserInfo():
+#     user = _getUser(session["email"])
+#     return jsonify({"email": user.email, "name": user.name, "role": user.role, "hospital": user.hospital, "unit": user.unit})
     
-@app.route("/getUsers", methods=["GET"])
-@login_required
-def getUsers():
+# @app.route("/getUsers", methods=["GET"])
+# @login_required
+def __getUsers():
     # this changes dynamically based on which role you have
-    user = _getUser(session["email"])
-    if not _isOneAdmin(user):
-        return jsonify({"error": "Only admins or unitadmins can get users for their hospital. Please contact support"}), 401
+    if current_user.role not in ["admin", "unitadmin", "doctor"]:
+        raise Exception("Only admins or unitadmins can get users for their hospital. Your role is: %s. Please contact support" % current_user.role)
     
     # else get users
-    try:
-        hospital, senderUnit = _gethospitalAndUnit(session["email"])
-        if user.role == "admin":
-            # return all users of that hospital
-            users = User.query.filter_by(hospital=hospital).all()
-        elif user.role == "unitadmin":
-            users = User.query.filter_by(hospital=hospital, unit=senderUnit).all()
-        
-        return jsonify([{"email": u.email, "name": u.name, "role": u.role, "hospital": u.hospital, "unit": u.unit} for u in users])
-    except Exception as e:
-        return jsonify({"error": "Error getting users: %s" % e.args[0]}), 500
+    hospital, senderUnit = current_user.hospital, current_user.unit
+    if current_user.role in ["admin", "unitadmin", "doctor"]:
+        # return all users of that hospital
+        users = Patient.query.filter_by(hospital=hospital).all()
+    # elif current_user.role == "unitadmin":
+    #     users = Patient.query.filter_by(hospital=hospital, maindoctor=senderUnit).all()
+        return users
+    else:
+        raise Exception("Invalid role: ", current_user.role)
 
 # somewhere to logout
 @app.route("/logout")
@@ -253,7 +233,19 @@ def unauthorized_handler():
 @app.route("/doctor-pac-search", methods=["GET"])
 @login_required
 def doctor_pac_search():
-    return render_template("doctor-pac-search.html")
+    # get the latest patients and show them
+    users = __getUsers()
+    data = []
+    for user in users:
+        data.append({"firstName": user.firstName, "lastName": user.lastName, "pac_id": user.pac_id, "edit": "<a href='doctor-pac-view?pacid=%s'>Edit</a>" % str(user.pac_id) })
+    if len(data) > 0:
+        df = pd.DataFrame(data)
+        df = df.set_index("pac_id")
+        table = df.to_html(render_links=True ,escape=False)
+    else:
+        table = "No patients yet! Create some to let them show here."
+    return render_template("doctor-pac-search.html", patientstable=table)
+
 
 @app.route("/booking-pac-search", methods=["GET"])
 @login_required

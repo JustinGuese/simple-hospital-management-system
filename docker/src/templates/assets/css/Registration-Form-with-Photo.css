@@ -6,8 +6,8 @@
 .register-photo .image-holder {
   display: table-cell;
   width: auto;
-  background: url(/assets/img/meeting.jpg);
-  background-size: cover;
+  background: url(https://www.buchinger-wilhelmi.com/wp-content/uploads/2019/12/Buchinger-Wilhelmi-Fastenklinik-logo-anniversary-gold-768x229.png);
+  background-size: contain;
 }
 
 .register-photo .form-container {

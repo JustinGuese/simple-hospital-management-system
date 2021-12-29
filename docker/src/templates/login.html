@@ -20,10 +20,10 @@
     <section class="login-clean" style="height: 100%;">
         <form method="post" action="login">
             <h2 class="visually-hidden">Login Form</h2>
-            <div class="illustration"><i class="icon ion-ios-navigate"></i></div>
+            <div class="illustration"><i class="icon ion-ios-locked"></i></div>
             <div class="mb-3"><input class="form-control" type="email" name="email" placeholder="Email"></div>
             <div class="mb-3"><input class="form-control" type="password" name="password" placeholder="Password"></div>
-            <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Log In</button></div><small class="form-text" style="color: var(--bs-red);font-weight: bold;">{{ error }}</small><a class="forgot" href="#">Forgot your email or password?</a><button class="btn btn-primary d-block w-100" type="submit" style="background: rgb(234,123,146);margin-bottom: 6px;" data-bs-target="register">Register</button>
+            <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Log In</button></div><small class="form-text" style="color: var(--bs-red);font-weight: bold;">{{ error }}</small><a class="forgot" href="#">Forgot your email or password?</a><a class="btn btn-primary d-block w-100" role="button" href="register" style="background: rgb(234,123,146);margin-bottom: 6px;" data-bs-target="register">Register</a>
         </form>
     </section>
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>

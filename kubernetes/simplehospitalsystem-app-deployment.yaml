@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kiss-app
+  name: kiss-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kiss-app
+  strategy: 
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: kiss-app
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: postgres
+            - name: POSTGRES_HOST
+              value: kiss-postgres-service
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              value: postgres
+            - name: SECRET_KEY
+              value: tendies123
+          image: guestros/hospital-system-test:latest
+          name: kiss-app
+          ports:
+            - containerPort: 5000
+          resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kiss-app
+  name: kiss-app-service
+spec:
+  type: ClusterIP
+  ports:
+    - name: "kiss-app"
+      port: 8080
+      targetPort: 5000
+  selector:
+    app: kiss-app
